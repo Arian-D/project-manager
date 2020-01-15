@@ -8,6 +8,8 @@ import Interaction
 import System.Directory
 import System.Environment (getArgs, getEnv)
 import System.FilePath ( (</>) )
+import System.Process
+import Control.Exception (tryJust)
 
 -- Parse args
 main :: IO ()
@@ -22,6 +24,7 @@ main = do
        "list" -> showAllProjects
        "add" -> add currentDir subcommands
        "create" -> create
+       "edit" -> edit $ head subcommands
        otherwise -> help
 
 -- Show all the projects symlinked to $HOME/.pm/projects
@@ -35,6 +38,7 @@ showAllProjects = do
       then putStrLn "No projects :("
       else putStrLn $ unlines projects
   return ()
+
 
 -- A mere "installation" of pm
 setup :: IO ()
@@ -52,7 +56,22 @@ setup = do
     createDirectoryIfMissing True pmPath
     putStrLn "Done"
 
+-- Open the $EDITOR to edit
+edit :: String -> IO ()
+edit project = do
+  eitherEditor <- try $ getEnv "EDITOR"
+  case eitherEditor :: Either IOError String of
+    -- TODO: Ask interactively
+    Left _ -> putStrLn "You need to specify the $EDITOR environment variable"
+    Right editor -> do
+      path <- projectPath project
+      callCommand $ unwords [editor, path]
 
+
+projectPath :: String -> IO FilePath
+projectPath project = do
+  homeDir <- getHomeDirectory
+  return $ homeDir </> pmDir </> "projects" </> project
 
 -- Print help
 -- TODO: Detect wrong usage, empty args (which might need to be handled), or wrong commands
@@ -63,6 +82,5 @@ help = mapM_ putStrLn [ "Project Manager"
                       , "  pm add\t add the current directory to the list of projects"
                       , "  pm list\t List the projects"
                       , "  pm create\t Create or initialize a project"
-                      -- , "  pm edit\t Open a project in your editor"
-                      -- , "  pm tag\t Tag a project with a keyword for grouping"
+                      , "  pm edit\t Open a project in your editor"
                       ]

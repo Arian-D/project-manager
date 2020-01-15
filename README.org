@@ -11,3 +11,6 @@ Currently, the only way to install it is using nix:
 - Add sqlite database to keep track of more info
 - Handle remote projects (ssh)
 - GNU Readline integration for autocompletion
+- Hooks for running a certain operation on multiple projects 
+  (i.e. cleaning node modules for all the node repos)
+- Spawn a (nix)shell for a project
