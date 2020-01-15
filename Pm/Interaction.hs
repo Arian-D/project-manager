@@ -1,4 +1,4 @@
-module Interaction where
+module Pm.Interaction where
 
 import Data.Char (toLower)
 

@@ -1,4 +1,4 @@
-module Config where
+module Pm.Config where
 
 -- Project manager's directory
 pmDir = ".pm" :: FilePath

@@ -1,6 +1,6 @@
-module Init where
+module Pm.Init where
 
-import Config
+import Pm.Config
 import System.Directory
 import System.FilePath (splitExtension, (</>), takeDirectory, makeRelative)
  

@@ -1,9 +1,9 @@
-module Create where
+module Pm.Create where
 
-import Config
+import Pm.Config
 import Data.Char (toLower)
-import Init
-import Interaction
+import Pm.Init
+import Pm.Interaction
 import System.Directory
 
 

@@ -1,15 +1,15 @@
-module Main where
+module Pm where
 
-import Config
 import Control.Exception (try, IOException)
-import Create
-import Init
-import Interaction
+import Control.Exception (tryJust)
+import Pm.Config
+import Pm.Create
+import Pm.Init
+import Pm.Interaction
 import System.Directory
 import System.Environment (getArgs, getEnv)
 import System.FilePath ( (</>) )
 import System.Process
-import Control.Exception (tryJust)
 
 -- Parse args
 main :: IO ()
