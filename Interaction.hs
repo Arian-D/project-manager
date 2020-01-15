@@ -37,23 +37,7 @@ askWithSuggestion question suggestion = do
   if null response
     then return suggestion
     else return response
-
-
-
--- FIXME: This is still not done
--- askWithAutoCompletion :: String -> [String] -> IO String
--- askWithAutoCompletion question options = autoComplete "" question options
-
--- autoComplete :: String -> String -> [String] -> IO String
--- autoComplete typed question options = do
---   c <- getChar
---   let matched = (filter startsWith c) $ options
---         where startsWith :: Char -> String -> Bool
---               startsWith char str =
---                 case str of
---                   [] -> False
---                   [x] -> char == x
---                   (x : xs) -> if char == x then startsWith char xs else False
---   return ()
+      
+    
 
 

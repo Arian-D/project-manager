@@ -6,9 +6,8 @@ import Create
 import Init
 import Interaction
 import System.Directory
-import System.Environment (getArgs)
+import System.Environment (getArgs, getEnv)
 import System.FilePath ( (</>) )
-
 
 -- Parse args
 main :: IO ()
@@ -21,9 +20,8 @@ main = do
      case command of
        "setup" -> setup
        "list" -> showAllProjects
-       "add" -> addToProjects currentDir
+       "add" -> add currentDir subcommands
        "create" -> create
-       
        otherwise -> help
 
 -- Show all the projects symlinked to $HOME/.pm/projects
@@ -53,6 +51,7 @@ setup = do
     else do
     createDirectoryIfMissing True pmPath
     putStrLn "Done"
+
 
 
 -- Print help

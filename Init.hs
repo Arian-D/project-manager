@@ -4,9 +4,6 @@ import Config
 import System.Directory
 import System.FilePath (splitExtension, (</>), takeDirectory, makeRelative)
  
- {-# SCC "" #-} 
--- 
-
 -- This is where the magic happens
 initialize :: ProjectConfig -> IO ()
 initialize poperties = do
@@ -20,18 +17,20 @@ hasFile directory extension = do
   files <- listDirectory directory
   return . null . (filter (\(_,ext) -> ext == extension)) . (map splitExtension) $ files
 
+-- Add a project to a list of groups
+add :: FilePath -> [String] -> IO ()
+add dir groups = do
+  if null groups
+    then addToProjects dir
+    else mapM_ (addToGroup dir) groups
+    
 -- Add a project to the projects
 addToProjects :: FilePath -> IO ()
-addToProjects dir = do
-  current <- getCurrentDirectory
-  homeDir <- getHomeDirectory
-  let projectsDir = homeDir </> pmDir </> "projects"
-  createDirectoryIfMissing True projectsDir
-  projectName <- directoryName
-  createFileLink current $ projectsDir </> projectName
+addToProjects dir = addToGroup dir "projects"
+
 -- Add a project folder to a symlinked group
-addToGroup :: String -> FilePath -> IO ()
-addToGroup group dir = do
+addToGroup :: FilePath -> String -> IO ()
+addToGroup dir group = do
   current <- getCurrentDirectory
   homeDir <- getHomeDirectory
   let projectsDir = homeDir </> pmDir </> group

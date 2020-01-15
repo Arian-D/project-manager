@@ -1,5 +1,6 @@
 module Create where
 
+import Config
 import Data.Char (toLower)
 import Init
 import Interaction

@@ -1,0 +1,13 @@
+* Project Manager
+This just a small tool that I use to manage the small projects that
+are scattered over my computer. Feel free to try it!
+* Installation
+Currently, the only way to install it is using nix:
+~nix-env -i -f default.nix~
+* Usage
+~pm help~
+* Todos
+- Add tags support
+- Add sqlite database to keep track of more info
+- Handle remote projects (ssh)
+- GNU Readline integration for autocompletion
