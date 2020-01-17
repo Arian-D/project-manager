@@ -6,6 +6,7 @@ import Pm.Config
 import Pm.Create
 import Pm.Init
 import Pm.Interaction
+import Pm.Setup
 import System.Directory
 import System.Environment (getArgs, getEnv)
 import System.FilePath ( (</>) )
@@ -25,7 +26,12 @@ main = do
        "add" -> add currentDir subcommands
        "create" -> create
        "edit" -> edit $ head subcommands
+       "remove" -> case subcommands of
+                    [] -> putStrLn "You need to specify the project and group name"
+                    [x] -> putStrLn "You need to specify the project and group name"
+                    [project, group] -> removeProjectFromGroup project group
        otherwise -> help
+
 
 -- Show all the projects symlinked to $HOME/.pm/projects
 showAllProjects = do
@@ -38,23 +44,6 @@ showAllProjects = do
       then putStrLn "No projects :("
       else putStrLn $ unlines projects
   return ()
-
-
--- A mere "installation" of pm
-setup :: IO ()
-setup = do
-  homeDir <- getHomeDirectory
-  let pmPath = homeDir </> pmDir
-  itsAlreadyThere <- doesDirectoryExist pmPath
-  if itsAlreadyThere
-    then do
-    yes <- yesOrNoLeaning False "You seem to already have pm; would you like to set it up again?"
-    if yes
-      then removeDirectoryRecursive pmPath
-      else return ()
-    else do
-    createDirectoryIfMissing True pmPath
-    putStrLn "Done"
 
 -- Open the $EDITOR to edit
 edit :: String -> IO ()

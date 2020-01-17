@@ -14,3 +14,4 @@ Currently, the only way to install it is using nix:
 - Hooks for running a certain operation on multiple projects 
   (i.e. cleaning node modules for all the node repos)
 - Spawn a (nix)shell for a project
+- Create project layout from a template (TOML rather than JSON or YAML)

@@ -22,6 +22,7 @@ yesOrNoStrict question = do
     else do putStrLn ""
             yesOrNoStrict question
 
+-- Ask a question that may or may not be answered
 askSoftly :: String -> IO (Maybe String)
 askSoftly question = do
   putStr question
@@ -29,6 +30,7 @@ askSoftly question = do
   if null response
     then return Nothing
     else return . Just $ response
+
 -- Ask with suggestion
 askWithSuggestion :: String -> String -> IO String
 askWithSuggestion question suggestion = do
@@ -37,7 +39,3 @@ askWithSuggestion question suggestion = do
   if null response
     then return suggestion
     else return response
-      
-    
-
-

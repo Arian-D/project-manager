@@ -17,7 +17,11 @@ hasFile directory extension = do
   files <- listDirectory directory
   return . null . (filter (\(_,ext) -> ext == extension)) . (map splitExtension) $ files
 
--- Add a project to a list of groups
+-- This section might go in another file
+
+
+-- Add a project to a group(s)
+-- TODO: Make this more intelligent
 add :: FilePath -> [String] -> IO ()
 add dir groups = do
   if null groups
@@ -26,20 +30,52 @@ add dir groups = do
     
 -- Add a project to the projects
 addToProjects :: FilePath -> IO ()
-addToProjects dir = addToGroup dir "projects"
+addToProjects = addToGroup tagsDir
 
 -- Add a project folder to a symlinked group
 addToGroup :: FilePath -> String -> IO ()
-addToGroup dir group = do
+addToGroup group dir = do
   current <- getCurrentDirectory
-  homeDir <- getHomeDirectory
-  let projectsDir = homeDir </> pmDir </> group
-  createDirectoryIfMissing True projectsDir
+  groupsDir <- (</> group) <$> tagsPath
+  createDirectoryIfMissing True groupsDir
   projectName <- directoryName
-  createFileLink current $ projectsDir </> projectName
+  itExists <- isAlreadyInGroup group projectName
+  if itExists
+    then putStrLn . concat $ [ "Warning: The project "
+                             , projectName
+                             , " already exists in "
+                             , group
+                             ]
+    else createFileLink current $ groupsDir </> projectName
 
+
+-- TODO: Add a function that removes a function
+-- It needs to go through each folder and remove the symlink
+
+-- Remove project's tag
+removeProjectFromGroup :: String -> FilePath -> IO ()
+removeProjectFromGroup projectName group = do
+  projectInGroupPath <- (</> group </> projectName) <$> tagsPath
+  itExists <- isAlreadyInGroup group projectName
+  if itExists
+    then removeFile projectInGroupPath
+    else putStrLn . concat $ [ "It seems that the project "
+                             , projectName
+                             , " is not in "
+                             , group]
+
+-- Check to see if a project exists
+isAProject :: String -> IO Bool
+isAProject = isAlreadyInGroup "projects"
+
+-- Check to see if project exists within a group
+isAlreadyInGroup :: String -> FilePath -> IO Bool
+isAlreadyInGroup group projectName = do
+  homeDir <- getHomeDirectory
+  doesDirectoryExist $ foldl1 (</>) [homeDir, pmDir, group, projectName]
+  
 -- Get name of the current directory
--- There must an easier way
+-- There must be an easier way
 directoryName :: IO FilePath
 directoryName = do
   currentDir <- getCurrentDirectory
